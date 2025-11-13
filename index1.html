@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credit Card Fraud Detection AI</title>
+    <!-- ONNX Runtime Web CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
@@ -80,13 +82,13 @@
 <body>
     <div class="container">
         <header>
-            <h1>🔒 Credit Card Fraud Detection AI</h1>
+            <h1>Credit Card Fraud Detection AI</h1>
             <p class="subtitle">PyTorch Neural Networks with ONNX Deployment</p>
         </header>
 
         <div class="main-grid">
             <div class="card">
-                <h2>🎯 Transaction Analysis</h2>
+                <h2>Transaction Analysis</h2>
                 <h3>Select AI Model:</h3>
                 <div class="model-selector">
                     <label class="model-option active">
@@ -105,7 +107,7 @@
                         <small style="display: block; color: #666; font-size: 0.8em;">Minimal</small>
                     </label>
                 </div>
-                <div id="status" class="status"></div>
+                <div id="status" class="status">Loading models...</div>
                 <h3>Transaction Details:</h3>
                 <div class="input-row">
                     <div class="form-group"><label>Time (seconds)</label><input type="number" id="time" step="1" min="0" max="172792" placeholder="0" value="0"></div>
@@ -156,13 +158,13 @@
                     <input type="number" id="v28" placeholder="V28" step="0.1" value="0">
                 </div>
                 <div class="button-group">
-                    <button class="btn-predict" onclick="predictFraud()">🔮 Predict Fraud</button>
-                    <button class="btn-reset" onclick="resetForm()">↻ Reset</button>
+                    <button class="btn-predict" onclick="predictFraud()">Predict Fraud</button>
+                    <button class="btn-reset" onclick="resetForm()">Reset</button>
                 </div>
             </div>
 
             <div class="card">
-                <h2>📊 Prediction Results</h2>
+                <h2>Prediction Results</h2>
                 <div id="resultsSection" class="results-section">
                     <div class="result-header">
                         <div class="result-item"><div class="result-label">Status</div><div id="predictionStatus" class="result-value"></div></div>
@@ -178,12 +180,13 @@
                         <div class="probability-item"><div class="probability-label">Fraud</div><div class="probability-bar"><div id="fraudProb2" class="probability-fill" style="width: 0%;"></div></div><div class="probability-value" id="fraudValue">0%</div></div>
                     </div>
                 </div>
-                <div class="info-box" id="emptyBox"><h3>👋 Welcome</h3><p>Enter transaction details and click <strong>"Predict Fraud"</strong> to analyze.</p><p style="margin-top: 10px;">The neural network will classify if this transaction looks fraudulent.</p></div>
+                <div class="info-box" id="emptyBox"><h3>Welcome</h3><p>Enter transaction details and click <strong>"Predict Fraud"</strong> to analyze.</p><p style="margin-top: 10px;">The neural network will classify if this transaction looks fraudulent.</p></div>
             </div>
         </div>
 
+        <!-- Tabs and other content (unchanged) -->
         <div class="card" style="margin-bottom: 30px;">
-            <h2>📈 Model Information & Metrics</h2>
+            <h2>Model Information & Metrics</h2>
             <div class="tabs">
                 <button class="tab-button active" onclick="switchTab(event, 'architecture')">Architecture</button>
                 <button class="tab-button" onclick="switchTab(event, 'training')">Training</button>
@@ -193,23 +196,23 @@
 
             <div id="architecture" class="tab-content active">
                 <h3>Neural Network Architectures</h3>
-                <div class="feature-card"><strong>Simple Anomaly Detector</strong><p>Input(30) → Dense(128) → ReLU → Dropout(0.3) → Dense(64) → ReLU → Dropout(0.3) → Output(2)<br><strong>Parameters:</strong> ~10,240 | <strong>Speed:</strong> ⚡ Fast</p></div>
-                <div class="feature-card"><strong>Deep Anomaly Detector (RECOMMENDED)</strong><p>Input(30) → Dense(256) → BatchNorm → ReLU → Dropout(0.4) → Dense(128) → BatchNorm → ReLU → Dropout(0.4) → Dense(64) → BatchNorm → ReLU → Dropout(0.4) → Dense(32) → Output(2)<br><strong>Parameters:</strong> ~56,704 | <strong>Speed:</strong> 🎯 Balanced | <strong>Accuracy:</strong> 🏆 Highest</p></div>
-                <div class="feature-card"><strong>Light Anomaly Detector</strong><p>Input(30) → Dense(64) → ReLU → Dropout(0.2) → Dense(32) → ReLU → Output(2)<br><strong>Parameters:</strong> ~2,306 | <strong>Speed:</strong> ⚡⚡ Fastest | <strong>Size:</strong> 📱 Mobile-friendly</p></div>
+                <div class="feature-card"><strong>Simple Anomaly Detector</strong><p>Input(30) → Dense(128) → ReLU → Dropout(0.3) → Dense(64) → ReLU → Dropout(0.3) → Output(2)<br><strong>Parameters:</strong> ~10,240 | <strong>Speed:</strong> Fast</p></div>
+                <div class="feature-card"><strong>Deep Anomaly Detector (RECOMMENDED)</strong><p>Input(30) → Dense(256) → BatchNorm → ReLU → Dropout(0.4) → Dense(128) → BatchNorm → ReLU → Dropout(0.4) → Dense(64) → BatchNorm → ReLU → Dropout(0.4) → Dense(32) → Output(2)<br><strong>Parameters:</strong> ~56,704 | <strong>Speed:</strong> Balanced | <strong>Accuracy:</strong> Highest</p></div>
+                <div class="feature-card"><strong>Light Anomaly Detector</strong><p>Input(30) → Dense(64) → ReLU → Dropout(0.2) → Dense(32) → ReLU → Output(2)<br><strong>Parameters:</strong> ~2,306 | <strong>Speed:</strong> Fastest | <strong>Size:</strong> Mobile-friendly</p></div>
             </div>
 
             <div id="training" class="tab-content">
                 <h3>Training Configuration</h3>
                 <div class="feature-card"><strong>Loss Function: Cross-Entropy Loss</strong><p>Used for multi-class classification. Combines LogSoftmax and Negative Log-Likelihood to measure probability divergence.</p></div>
                 <div class="formula-box">Loss = -Σ(y_true × log(softmax(predictions)))</div>
-                <div class="feature-card"><strong>Why Cross-Entropy?</strong><p>✓ Perfect for classification tasks<br>✓ Sensitive to confident wrong predictions<br>✓ Standard for binary/multi-class problems<br>✓ Efficient backpropagation</p></div>
+                <div class="feature-card"><strong>Why Cross-Entropy?</strong><p>Perfect for classification tasks<br>Sensitive to confident wrong predictions<br>Standard for binary/multi-class problems<br>Efficient backpropagation</p></div>
                 <div class="feature-card"><strong>Optimizer: Adam</strong><p><strong>Learning Rate:</strong> 0.001 | <strong>Beta1:</strong> 0.9 | <strong>Beta2:</strong> 0.999 | <strong>Weight Decay:</strong> 1e-5<br>Adaptive learning rate with momentum for fast convergence</p></div>
                 <div class="feature-card"><strong>Training Details</strong><p><strong>Epochs:</strong> 50 | <strong>Batch Size:</strong> 32<br><strong>Dataset:</strong> 284,807 transactions | <strong>Train-Test Split:</strong> 80-20 (stratified)<br><strong>Class Imbalance:</strong> Handled with WeightedRandomSampler</p></div>
             </div>
 
             <div id="metrics" class="tab-content">
                 <h3>Performance Metrics Explained</h3>
-                <div class="feature-card"><strong>Accuracy</strong><p><strong>Formula:</strong> (TP + TN) / (TP + TN + FP + FN)<br><strong>⚠ Note:</strong> Misleading with imbalanced data (99.83% normal transactions)</p></div>
+                <div class="feature-card"><strong>Accuracy</strong><p><strong>Formula:</strong> (TP + TN) / (TP + TN + FP + FN)<br><strong>Note:</strong> Misleading with imbalanced data (99.83% normal transactions)</p></div>
                 <div class="feature-card"><strong>F1-Score (Weighted) ← REAL METRIC</strong><p><strong>Formula:</strong> 2 × (Precision × Recall) / (Precision + Recall)<br><strong>Range:</strong> 0 to 1 (higher is better)<br><strong>Best for:</strong> Imbalanced datasets like fraud detection</p></div>
                 <div class="feature-card"><strong>ROC-AUC Score ← BEST METRIC</strong><p><strong>Meaning:</strong> Area Under the ROC Curve<br><strong>Range:</strong> 0 to 1 (1 = perfect, 0.5 = random)<br><strong>0.9-1.0:</strong> Excellent | <strong>0.8-0.9:</strong> Good | <strong>0.7-0.8:</strong> Fair</p></div>
                 <div class="feature-card"><strong>Precision & Recall</strong><p><strong>Precision:</strong> Of detected frauds, how many were actually fraud?<br><strong>Recall:</strong> Of actual frauds, how many did we catch?<br><strong>Trade-off:</strong> Higher recall catches more fraud but more false alarms</p></div>
@@ -230,17 +233,128 @@
                         <tr><td><strong>Best For</strong></td><td>Real-time</td><td>High accuracy</td><td>Edge devices</td></tr>
                     </tbody>
                 </table>
-                <div class="feature-card" style="margin-top: 20px;"><strong>🏆 Recommendation: Deep Model</strong><p>Best overall performance with highest ROC-AUC (0.985) and F1-Score (0.872). Catches 92% of fraud while maintaining reasonable false alarm rate.</p></div>
+                <div class="feature-card" style="margin-top: 20px;"><strong>Recommendation: Deep Model</strong><p>Best overall performance with highest ROC-AUC (0.985) and F1-Score (0.872). Catches 92% of fraud while maintaining reasonable false alarm rate.</p></div>
             </div>
         </div>
 
         <footer>
-            <p>💻 Machine Learning: PyTorch with Cross-Entropy Loss | Deployment: ONNX</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">✨ Real fraud detection powered by neural networks trained on 284K+ transactions</p>
+            <p>Machine Learning: PyTorch with Cross-Entropy Loss | Deployment: ONNX</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Real fraud detection powered by neural networks trained on 284K+ transactions</p>
         </footer>
     </div>
 
+    <!-- FULLY WORKING ONNX SCRIPT -->
     <script>
+        let sessions = {};
+
+        // Load all 3 ONNX models
+        async function loadModels() {
+            updateStatus('Loading AI models...', 'loading');
+            const models = [
+                { name: 'simple', file: 'simple.onnx' },
+                { name: 'deep', file: 'deep.onnx' },
+                { name: 'light', file: 'light.onnx' }
+            ];
+
+            let loaded = 0;
+            for (const model of models) {
+                try {
+                    sessions[model.name] = await ort.InferenceSession.create(model.file);
+                    loaded++;
+                    console.log(`${model.name} loaded`);
+                } catch (e) {
+                    console.error(`Failed to load ${model.name}:`, e);
+                    updateStatus(`Failed: ${model.name}`, 'error');
+                }
+            }
+
+            if (loaded === 3) {
+                updateStatus('All models ready!', 'success');
+            } else {
+                updateStatus(`${loaded}/3 models loaded`, 'error');
+            }
+        }
+
+        // Input collection
+        function getInputValues() {
+            const inputs = [];
+            inputs.push(parseFloat(document.getElementById('time').value) || 0);
+            inputs.push(parseFloat(document.getElementById('amount').value) || 0);
+            for (let i = 1; i <= 28; i++) {
+                const val = parseFloat(document.getElementById(`v${i}`).value);
+                inputs.push(isNaN(val) ? 0 : val);
+            }
+            return new Float32Array(inputs);
+        }
+
+        // Predict with selected ONNX model
+        async function predictFraud() {
+            const modelType = document.querySelector('input[name="model"]:checked').value;
+            const session = sessions[modelType];
+
+            if (!session) {
+                updateStatus('Model not loaded!', 'error');
+                return;
+            }
+
+            updateStatus('Predicting...', 'loading');
+
+            try {
+                const input = getInputValues();
+                const tensor = new ort.Tensor('float32', input, [1, 30]);
+                const outputMap = await session.run({ [session.inputNames[0]]: tensor });
+                const output = outputMap[session.outputNames[0]].data;
+
+                const fraudProb = (output[1] * 100).toFixed(1);
+                const normalProb = (output[0] * 100).toFixed(1);
+
+                displayResults({ fraud_prob: fraudProb, normal_prob: normalProb });
+                updateStatus('Prediction complete!', 'success');
+            } catch (e) {
+                updateStatus('Prediction failed', 'error');
+                console.error(e);
+            }
+        }
+
+        // Display results
+        function displayResults(result) {
+            const resultsSection = document.getElementById('resultsSection');
+            const emptyBox = document.getElementById('emptyBox');
+            resultsSection.classList.add('show');
+            emptyBox.style.display = 'none';
+
+            const isFraud = parseFloat(result.fraud_prob) > 50;
+            const statusEl = document.getElementById('predictionStatus');
+            statusEl.textContent = isFraud ? 'FRAUD' : 'SAFE';
+            statusEl.className = `result-value ${isFraud ? 'fraud' : 'safe'}`;
+
+            const confidenceEl = document.getElementById('confidence');
+            confidenceEl.textContent = Math.max(result.fraud_prob, result.normal_prob) + '%';
+            confidenceEl.className = `result-value ${isFraud ? 'fraud' : 'safe'}`;
+
+            const fraudBar = document.getElementById('fraudBar');
+            fraudBar.style.width = result.fraud_prob + '%';
+            fraudBar.textContent = result.fraud_prob + '%';
+            fraudBar.className = `confidence-fill ${isFraud ? 'fraud' : 'safe'}`;
+
+            document.getElementById('normalBar').style.width = result.normal_prob + '%';
+            document.getElementById('fraudProb2').style.width = result.fraud_prob + '%';
+            document.getElementById('normalProb').textContent = result.normal_prob + '%';
+            document.getElementById('fraudValue').textContent = result.fraud_prob + '%';
+        }
+
+        // Reset form
+        function resetForm() {
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                if (input.id === 'amount') input.value = '100';
+                else if (input.id === 'time') input.value = '0';
+                else input.value = '0';
+            });
+            document.getElementById('resultsSection').classList.remove('show');
+            document.getElementById('emptyBox').style.display = 'block';
+            updateStatus('Form reset', 'success');
+        }
+
         // Tab switching
         function switchTab(event, tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -254,124 +368,20 @@
             radio.addEventListener('change', function() {
                 document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('active'));
                 this.parentElement.classList.add('active');
-                updateStatus(`Model switched to ${this.value}`, 'success');
+                updateStatus(`Switched to ${this.value} model`, 'success');
             });
         });
 
+        // Status update
         function updateStatus(message, type = 'info') {
             const status = document.getElementById('status');
             status.textContent = message;
             status.className = `status show ${type}`;
-            setTimeout(() => status.classList.remove('show'), 3000);
+            setTimeout(() => status.classList.remove('show'), 4000);
         }
 
-        function getInputValues() {
-            const inputs = [];
-            inputs.push(parseFloat(document.getElementById('time').value) || 0);
-            inputs.push(parseFloat(document.getElementById('amount').value) || 0);
-            for (let i = 1; i <= 28; i++) {
-                const val = parseFloat(document.getElementById(`v${i}`).value);
-                inputs.push(isNaN(val) ? 0 : val);
-            }
-            return inputs;
-        }
-
-        function simulateNeuralNetwork(inputs, modelType) {
-            let fraudScore = 0;
-            const time = inputs[0];
-            const amount = inputs[1];
-            
-            if (amount > 2000) fraudScore += 0.20;
-            if (amount < 1) fraudScore += 0.10;
-            if (amount > 500) fraudScore += 0.15;
-            
-            const hour = (time / 3600) % 24;
-            if (hour > 23 || hour < 3) fraudScore += 0.08;
-            
-            for (let i = 2; i < inputs.length; i++) {
-                const feature = inputs[i];
-                const absVal = Math.abs(feature);
-                if (absVal > 3) fraudScore += 0.20;
-                else if (absVal > 2) fraudScore += 0.12;
-                else if (absVal > 1) fraudScore += 0.06;
-                
-                if (modelType === 'simple') fraudScore += absVal * 0.008;
-                else if (modelType === 'deep') fraudScore += absVal * 0.012;
-                else if (modelType === 'light') fraudScore += absVal * 0.005;
-            }
-            
-            fraudScore = Math.min(100, Math.max(0, fraudScore * 4));
-            if (modelType === 'simple') fraudScore *= 0.95;
-            else if (modelType === 'deep') fraudScore *= 1.08;
-            
-            const normalScore = 100 - fraudScore;
-            return {
-                fraud_prob: Math.max(0, Math.min(100, fraudScore)),
-                normal_prob: Math.max(0, Math.min(100, normalScore))
-            };
-        }
-
-        function predictFraud() {
-            updateStatus('🔄 Analyzing transaction...', 'loading');
-            setTimeout(() => {
-                try {
-                    const inputs = getInputValues();
-                    const modelType = document.querySelector('input[name="model"]:checked').value;
-                    const validInputs = inputs.every(val => !isNaN(val) && isFinite(val));
-                    if (!validInputs) {
-                        updateStatus('Error: Invalid input values', 'error');
-                        return;
-                    }
-                    const result = simulateNeuralNetwork(inputs, modelType);
-                    if (isNaN(result.fraud_prob) || isNaN(result.normal_prob)) {
-                        updateStatus('Error: Calculation failed', 'error');
-                        return;
-                    }
-                    displayResults(result);
-                    updateStatus('✓ Prediction complete!', 'success');
-                } catch (error) {
-                    updateStatus(`Error: ${error.message}`, 'error');
-                }
-            }, 800);
-        }
-
-        function displayResults(result) {
-            const resultsSection = document.getElementById('resultsSection');
-            const emptyBox = document.getElementById('emptyBox');
-            resultsSection.classList.add('show');
-            emptyBox.style.display = 'none';
-            const isFraud = result.fraud_prob > 50;
-            const statusEl = document.getElementById('predictionStatus');
-            statusEl.textContent = isFraud ? '⚠️ FRAUD' : '✓ SAFE';
-            statusEl.className = `result-value ${isFraud ? 'fraud' : 'safe'}`;
-            const maxConfidence = Math.max(result.fraud_prob, result.normal_prob);
-            const confidenceEl = document.getElementById('confidence');
-            confidenceEl.textContent = maxConfidence.toFixed(1) + '%';
-            confidenceEl.className = `result-value ${isFraud ? 'fraud' : 'safe'}`;
-            const fraudBar = document.getElementById('fraudBar');
-            fraudBar.style.width = result.fraud_prob + '%';
-            fraudBar.textContent = result.fraud_prob.toFixed(1) + '%';
-            fraudBar.className = `confidence-fill ${isFraud ? 'fraud' : 'safe'}`;
-            const normalBar = document.getElementById('normalBar');
-            normalBar.style.width = result.normal_prob + '%';
-            const fraudProb2 = document.getElementById('fraudProb2');
-            fraudProb2.style.width = result.fraud_prob + '%';
-            document.getElementById('normalProb').textContent = result.normal_prob.toFixed(1) + '%';
-            document.getElementById('fraudValue').textContent = result.fraud_prob.toFixed(1) + '%';
-        }
-
-        function resetForm() {
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                if (input.id === 'amount') input.value = '100';
-                else if (input.id === 'time') input.value = '0';
-                else input.value = '0';
-            });
-            document.getElementById('resultsSection').classList.remove('show');
-            document.getElementById('emptyBox').style.display = 'block';
-            updateStatus('Form reset', 'success');
-        }
-
-        updateStatus('Ready for analysis', 'success');
+        // Load models on page load
+        window.addEventListener('load', loadModels);
     </script>
 </body>
 </html>
